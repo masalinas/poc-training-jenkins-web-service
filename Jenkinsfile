@@ -36,31 +36,44 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    // Create deployment YAML dynamically
                     sh """
-                    cat <<EOF | kubectl apply -f -
-                    apiVersion: apps/v1
-                    kind: Deployment
-                    metadata:
-                      name: ${KUBE_DEPLOYMENT}
-                      namespace: ${KUBE_NAMESPACE}
-                    spec:
-                      replicas: 1
-                      selector:
-                        matchLabels:
-                          app: simple-webpage
-                      template:
-                        metadata:
-                          labels:
-                            app: simple-webpage
-                        spec:
-                          containers:
-                          - name: simple-webpage
-                            image: ${DOCKER_IMAGE}
-                            ports:
-                            - containerPort: 80
-                    EOF
-                    """
+cat << EOF | kubectl apply -f -
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: ${KUBE_DEPLOYMENT}
+    namespace: ${KUBE_NAMESPACE}
+spec:
+    replicas: 1
+    selector:
+    matchLabels:
+        app: simple-webpage
+    template:
+    metadata:
+        labels:
+        app: simple-webpage
+    spec:
+        containers:
+        - name: simple-webpage
+        image: ${DOCKER_IMAGE}
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: simple-webpage-service
+    namespace: ${KUBE_NAMESPACE}
+spec:
+    selector:
+    app: simple-webpage
+    ports:
+    - protocol: TCP
+        port: 80
+        targetPort: 80
+    type: NodePort
+EOF
+"""
                 }
             }
         }
