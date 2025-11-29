@@ -54,7 +54,7 @@ spec:
     spec:
       containers:
         - name: simple-web
-          image: simple-web:latest
+          image: ${DOCKER_IMAGE}
           ports:
             - containerPort: 80
 ---
