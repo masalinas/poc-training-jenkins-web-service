@@ -59,20 +59,6 @@ pipeline {
                             image: ${DOCKER_IMAGE}
                             ports:
                             - containerPort: 80
-                    ---
-                    apiVersion: v1
-                    kind: Service
-                    metadata:
-                      name: simple-webpage-service
-                      namespace: ${KUBE_NAMESPACE}
-                    spec:
-                      selector:
-                        app: simple-webpage
-                      ports:
-                        - protocol: TCP
-                          port: 80
-                          targetPort: 80
-                      type: NodePort
                     EOF
                     """
                 }
