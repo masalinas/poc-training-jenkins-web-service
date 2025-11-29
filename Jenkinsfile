@@ -54,7 +54,7 @@ spec:
     spec:
       containers:
         - name: simple-web
-          image: nginx:latest
+          image: simple-web:latest
           ports:
             - containerPort: 80
 ---
