@@ -37,41 +37,39 @@ pipeline {
             steps {
                 script {
                     sh """
-cat << EOF | kubectl apply -f -
+cat << 'EOF' | kubectl apply -f -
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: ${KUBE_DEPLOYMENT}
-    namespace: ${KUBE_NAMESPACE}
+  name: simple-web
 spec:
-    replicas: 1
-    selector:
+  replicas: 1
+  selector:
     matchLabels:
-        app: simple-webpage
-    template:
+      app: simple-web
+  template:
     metadata:
-        labels:
-        app: simple-webpage
+      labels:
+        app: simple-web
     spec:
-        containers:
-        - name: simple-webpage
-        image: ${DOCKER_IMAGE}
-        ports:
-        - containerPort: 80
+      containers:
+        - name: simple-web
+          image: nginx:latest
+          ports:
+            - containerPort: 80
 ---
 apiVersion: v1
 kind: Service
 metadata:
-    name: simple-webpage-service
-    namespace: ${KUBE_NAMESPACE}
+  name: simple-web
 spec:
-    selector:
-    app: simple-webpage
-    ports:
-    - protocol: TCP
-        port: 80
-        targetPort: 80
-    type: NodePort
+  type: NodePort
+  selector:
+    app: simple-web
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30080
 EOF
 """
                 }
