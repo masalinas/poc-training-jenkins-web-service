@@ -30,6 +30,7 @@ To acces to Web page
 Get the cluster IP
 ```
 $ minikube ip
+192.168.49.2
 ```
 
 Get the nodeport generated from servicve web-service:
