@@ -28,7 +28,7 @@ To build and deploy the service execute the Jenkins pipeline
 
 - **STEP03**: Docker Image generated in Dockr Hub
 
-    ![Kubernetes Docker Hub Image](./images/dockerhub_web_service.png.png "Kubernetes Docker Hub Image")
+    ![Kubernetes Docker Hub Image](./images/dockerhub_web_service.png "Kubernetes Docker Hub Image")
 
 - **STEP04**: Kubernetes resources deployed in default namespace
 
