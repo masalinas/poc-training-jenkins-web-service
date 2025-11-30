@@ -5,6 +5,7 @@ pipeline {
         REGISTRY = "ofertoio"
         DOCKER_IMAGE = "web-service"
         KUBE_NAMESPACE = "default"
+        SERVICE_NAME = "web-service"
     }
 
     stages {
@@ -47,41 +48,20 @@ pipeline {
             steps {
                 script {
                     sh """
-cat << 'EOF' | kubectl apply -f -
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: simple-web
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: simple-web
-  template:
-    metadata:
-      labels:
-        app: simple-web
-    spec:
-      containers:
-        - name: simple-web
-          image: ${REGISTRY}/${DOCKER_IMAGE}:${VERSION}
-          ports:
-            - containerPort: 80
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: simple-web
-spec:
-  type: NodePort
-  selector:
-    app: simple-web
-  ports:
-    - port: 80
-      targetPort: 80
-      nodePort: 30080
-EOF
-"""
+                    if docker service ls | grep -q ${SERVICE_NAME}; then
+                        echo "Service exists — updating to new version"
+                        docker service update \
+                            --image ${REGISTRY}/${DOCKER_IMAGE}:${VERSION} \
+                            --force \
+                            ${SERVICE_NAME}
+                    else
+                        echo "Service does NOT exist — creating"
+                        docker service create \
+                            --name ${SERVICE_NAME} \
+                            --publish 30080:80 \
+                            ${REGISTRY}/${IMAGE}:${VERSION}
+                    fi
+                    """
                 }
             }
         }
