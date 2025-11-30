@@ -36,7 +36,7 @@ pipeline {
         stage('Scan Container') {
             steps {
                 script {
-                    sh 'docker run --rm aquasec/trivy image --exit-code 1 --severity HIGH,CRITICAL ofertoio/web-service:v20251130-183437'
+                    sh "docker run --rm aquasec/trivy image --exit-code 1 --severity HIGH,CRITICAL ${REGISTRY}/${DOCKER_IMAGE}:${VERSION}"
                 }
             }
         } 
