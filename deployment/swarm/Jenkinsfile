@@ -33,6 +33,19 @@ pipeline {
             }
         }
 
+        stage('Scan Docker Image') {
+            steps {
+                script {
+                    // Run the scan and capture the exit code
+                    def result = sh(script: "docker scan --accept-license --json ${REGISTRY}/${DOCKER_IMAGE}:${VERSION}", returnStatus: true)
+                    
+                    if (result != 0) {
+                        error "Docker image has vulnerabilities! Pipeline stopped."
+                    }
+                }
+            }
+        }
+
         stage('Push Docker Image') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
