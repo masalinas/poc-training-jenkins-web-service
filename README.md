@@ -26,21 +26,26 @@ To build and deploy the service execute the Jenkins pipeline
 
     ![Kubernetes Execution](./images/pipeline_execution.png "Pipeline Execution")
 
-- **STEP03**: Kubernetes resources deployed in default namespace
+- **STEP03**: Docker Image generated in Dockr Hub
+
+    ![Kubernetes Docker Hub Image](./images/dockerhub_web_service.png.png "Kubernetes Docker Hub Image")
+
+- **STEP04**: Kubernetes resources deployed in default namespace
 
     ![Kubernetes Resources](./images/kubernetes_resouces.png "Kubernetes Resources")
 
-- **STEP04**: To acces to Web page
+- **STEP05**: To acces to Web page
     Get the cluster IP
     ```
     $ minikube ip
     192.168.49.2
     ```
 
-- **STEP05**: Get the nodeport generated from kubernetes service called web-service in default namespace
-![Kubernetes Resources](./images/service_nodeport.png "Kubernetes Resources")
+- **STEP06**: Get the nodeport generated from kubernetes service called web-service in default namespace
 
-- **STEP06**: Load from broweset using the nodeport geberated
+    ![Kubernetes Resources](./images/service_nodeport.png "Kubernetes Resources")
+
+- **STEP07**: Load from broweset using the nodeport geberated
     ```
     http://192.168.49.2:30080
     ```
