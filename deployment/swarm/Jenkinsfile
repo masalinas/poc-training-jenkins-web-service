@@ -59,7 +59,7 @@ pipeline {
                         docker service create \
                             --name ${SERVICE_NAME} \
                             --publish 30080:80 \
-                            ${REGISTRY}/${IMAGE}:${VERSION}
+                            ${REGISTRY}/${DOCKER_IMAGE}:${VERSION}
                     fi
                     """
                 }
