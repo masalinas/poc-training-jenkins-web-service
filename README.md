@@ -52,6 +52,8 @@ To build and deploy the service in k8s execute these steps:
     ![Web Service Portal](./images/web_service_portal.png "Web Service Portal")
 
 
-NOTES:
+## Repositories:
+
+All repositories related to Jenkins integration with Docker swarm and Kubernetes
 
 ![Orquestation Repositories](./images/repositories.png "Orquestation Repositories")
