@@ -36,11 +36,19 @@ pipeline {
         stage('Scan Docker Image') {
             steps {
                 script {
-                    // Run the scan and capture the exit code
-                    def result = sh(script: "docker scan --accept-license --json ${REGISTRY}/${DOCKER_IMAGE}:${VERSION}", returnStatus: true)
-                    
-                    if (result != 0) {
+                    // Run docker scan and save JSON output
+                    sh "docker scan --accept-license --json ${IMAGE_NAME}:${IMAGE_TAG} > scan-report.json"
+
+                    // Optionally fail the build if vulnerabilities found
+                    def scan = readJSON file: 'scan-report.json'
+                    if (scan.vulnerabilities && scan.vulnerabilities.size() > 0) {
+                        echo "Vulnerabilities found in image:"
+                        scan.vulnerabilities.each { vuln ->
+                            echo "ID: ${vuln.id}, Package: ${vuln.packageName}, Severity: ${vuln.severity}, Version: ${vuln.version}, Fix: ${vuln.fixedVersion}"
+                        }
                         error "Docker image has vulnerabilities! Pipeline stopped."
+                    } else {
+                        echo "No vulnerabilities found."
                     }
                 }
             }
