@@ -50,3 +50,8 @@ To build and deploy the service in k8s execute these steps:
     ```
 
     ![Web Service Portal](./images/web_service_portal.png "Web Service Portal")
+
+
+NOTES:
+
+![Orquestation Repositories](./images/repositories.png "Orquestation Repositories")
