@@ -56,4 +56,10 @@ To build and deploy the service in k8s execute these steps:
 
 All repositories related to Jenkins integration with Docker swarm and Kubernetes
 
+- [poc-training-jenkins-docker-swarm](https://github.com/masalinas/poc-training-jenkins-docker-swarm): Deploy a Docker Swarm using Docker Containers.
+
+- [poc-training-jenkins-docker-k8s](https://github.com/masalinas/poc-training-jenkins-docker-k8s): Deploy and Test the Jenkins CI/CD service integration with Host Docker and Kubernetes.
+
+- [poc-training-jenkins-web-service](https://github.com/masalinas/poc-training-jenkins-web-service): Frontend microservice to be deployed in Docker Swarm or Kubernetes using Jenkins pipelines
+
 ![Orquestation Repositories](./images/repositories.png "Orquestation Repositories")
