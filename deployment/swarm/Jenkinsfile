@@ -33,27 +33,13 @@ pipeline {
             }
         }
 
-        stage('Scan Docker Image') {
+        stage('Scan Container') {
             steps {
                 script {
-                    // Run docker scan and save JSON output
-                    sh "docker scan --accept-license --json ${REGISTRY}/${DOCKER_IMAGE}:${VERSION} > scan-report.json"
-
-                    // Optionally fail the build if vulnerabilities found
-                    def scan = readJSON file: 'scan-report.json'
-
-                    if (scan.vulnerabilities && scan.vulnerabilities.size() > 0) {
-                        echo "Vulnerabilities found in image:"
-                        scan.vulnerabilities.each { vuln ->
-                            echo "ID: ${vuln.id}, Package: ${vuln.packageName}, Severity: ${vuln.severity}, Version: ${vuln.version}, Fix: ${vuln.fixedVersion}"
-                        }
-                        error "Docker image has vulnerabilities! Pipeline stopped."
-                    } else {
-                        echo "No vulnerabilities found."
-                    }
+                    sh 'docker run --rm aquasec/trivy image --exit-code 1 --severity HIGH,CRITICAL ofertoio/web-service:v20251130-183437'
                 }
             }
-        }
+        } 
 
         stage('Push Docker Image') {
             steps {
