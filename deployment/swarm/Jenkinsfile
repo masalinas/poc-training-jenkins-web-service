@@ -44,11 +44,11 @@ pipeline {
             }
         }
 
-        stage('Deploy to Kubernetes') {
+        stage('Deploy to Docker Swarm') {
             steps {
                 script {
                     sh """
-                    if docker exec ${SWARM_MANAGER} docker node ls | grep -q ${SERVICE_NAME}; then
+                    if docker exec ${SWARM_MANAGER} docker node ls | grep ${SERVICE_NAME}; then
                         echo "Service exists — updating to new version"
                         docker exec -it ${SWARM_MANAGER} docker service update \
                             --image ${REGISTRY}/${DOCKER_IMAGE}:${VERSION} \
