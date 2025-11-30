@@ -4,7 +4,6 @@ pipeline {
     environment {
         REGISTRY = "ofertoio"
         DOCKER_IMAGE = "web-service"
-        KUBE_NAMESPACE = "default"
         SERVICE_NAME = "web-service"
     }
 
