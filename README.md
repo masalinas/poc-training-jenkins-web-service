@@ -1,22 +1,21 @@
 # Description
 A simple Web frontend from [startbootstrap](https://startbootstrap.com/) Bootstrap Templates portal
 
-## Build and Test service
-Execute these commans to:
+## Build and Deploy in host
+To build and deploy the service in host execute these steps:
 
-- Build image
+- **STEP01**: Build image
     ```
     $ docker build -t web-service .
     ```
 
-- Test Image
+- **STEP02**: Run container
     ```
     $ docker run --name web-service -d -p 8081:80 web-service
     ```
 
-## Build and Deploy
-
-To build and deploy the service execute the Jenkins pipeline
+## Build and Deploy in k8s
+To build and deploy the service in k8s execute these steps:
 
 - **STEP01**: Create the pipeline from repository code in jenkins:
 
