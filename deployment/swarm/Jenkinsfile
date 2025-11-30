@@ -33,17 +33,9 @@ pipeline {
             }
         }
 
-        stage('Scan Container') {
-            steps {
-                script {
-                    sh "docker run --rm aquasec/trivy image --exit-code 1 --severity HIGH,CRITICAL ${REGISTRY}/${DOCKER_IMAGE}:${VERSION}"
-                }
-            }
-        } 
-
         stage('Push Docker Image') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {                    
                     sh """
                         echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
                         docker push ${REGISTRY}/${DOCKER_IMAGE}:${VERSION}
@@ -51,6 +43,14 @@ pipeline {
                 }
             }
         }
+
+        stage('Scan Container') {
+            steps {
+                script {
+                    sh "docker run --rm aquasec/trivy image --exit-code 1 --severity HIGH,CRITICAL ${REGISTRY}/${DOCKER_IMAGE}:${VERSION}"
+                }
+            }
+        } 
 
         stage('Deploy to Docker Swarm') {
             steps {
