@@ -31,11 +31,22 @@ pipeline {
                     sh "docker build -t ${REGISTRY}/${DOCKER_IMAGE}:${VERSION} ."
                 }
             }
-        }
+        }       
 
-        stage('Scan Docker Image') {
+        /*stage('Push Docker Image') {
             steps {
-                script {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh """
+                        echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                        docker push ${REGISTRY}/${DOCKER_IMAGE}:${VERSION}
+                    """
+                }
+            }
+        }*/
+
+        stage('Push Docker Image') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     // Run docker scan and save JSON output
                     sh "docker scan --accept-license --json ${REGISTRY}/${DOCKER_IMAGE}:${VERSION} > scan-report.json"
 
@@ -48,19 +59,11 @@ pipeline {
                         }
                         error "Docker image has vulnerabilities! Pipeline stopped."
                     } else {
-                        echo "No vulnerabilities found."
+                        sh """
+                            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                            docker push ${REGISTRY}/${DOCKER_IMAGE}:${VERSION}
+                        """
                     }
-                }
-            }
-        }
-
-        stage('Push Docker Image') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh """
-                        echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                        docker push ${REGISTRY}/${DOCKER_IMAGE}:${VERSION}
-                    """
                 }
             }
         }
