@@ -4,7 +4,6 @@ pipeline {
     environment {
         DOCKER_IMAGE = "ofertoio/web-service"
         KUBE_NAMESPACE = "default"
-        KUBE_DEPLOYMENT = "web-service-deployment"
     }
 
     stages {
