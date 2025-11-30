@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "ofertoio/web-service:latest"
+        DOCKER_IMAGE = "ofertoio/web-service"
         KUBE_NAMESPACE = "default"
         KUBE_DEPLOYMENT = "web-service-deployment"
     }
@@ -14,10 +14,20 @@ pipeline {
             }
         }
 
+        stage('Generate Version') {
+            steps {
+                script {
+                    // Version format: vYYYYMMDD-HHMMSS
+                    VERSION = "v" + sh(script: "date +%Y%m%d-%H%M%S", returnStdout: true).trim()
+                    echo "Generated version: ${VERSION}"
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh "docker build -t ${DOCKER_IMAGE} ."
+                    sh "docker build -t ${DOCKER_IMAGE}:${VERSION} ."
                 }
             }
         }
@@ -27,7 +37,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh """
                         echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                        docker push ${DOCKER_IMAGE}
+                        docker push ${DOCKER_IMAGE}:${VERSION}
                     """
                 }
             }
@@ -54,7 +64,7 @@ spec:
     spec:
       containers:
         - name: simple-web
-          image: ${DOCKER_IMAGE}
+          image: ${DOCKER_IMAGE}:${VERSION}
           ports:
             - containerPort: 80
 ---
