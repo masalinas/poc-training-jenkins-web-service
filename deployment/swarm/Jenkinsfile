@@ -66,6 +66,7 @@ pipeline {
                         echo "Service does NOT exist — creating"
                         docker exec ${SWARM_MANAGER} docker service create \
                             --name ${SERVICE_NAME} \
+                            --restart-condition any \
                             --publish 8090:80 \
                             ${REGISTRY}/${DOCKER_IMAGE}:${VERSION}
                     fi
