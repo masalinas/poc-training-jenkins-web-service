@@ -1,6 +1,7 @@
 # Use official Nginx image
-# FROM nginx:alpine (has many vulnerabilities)
-FROM nginx:1.29.3-alpine-slim
+#(has many vulnerabilities)
+FROM nginx:alpine 
+# FROM nginx:1.29.3-alpine-slim
 
 # Copy our static website files into the default Nginx folder
 COPY ./ /usr/share/nginx/html
